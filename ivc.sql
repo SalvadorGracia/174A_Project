@@ -1,11 +1,11 @@
 CREATE TABLE Student_Is_In (
 	perm_number CHAR(7),
-sname CHAR(20),
-address CHAR(20),
-PIN CHAR(4),
+    sname CHAR(20),
+    address CHAR(20),
+    PIN CHAR(4),
 	mname CHAR(20),
 	dname CHAR(20),
-	PRIMARY KEY (perm_number)
+	PRIMARY KEY (perm_number),
 	FOREIGN KEY (mname) REFERENCES Major,
 	FOREIGN KEY (dname) REFERENCES Department
 );
@@ -38,7 +38,7 @@ CREATE TABLE Current_Courses (
 	perm_number CHAR(7),
 	course_number CHAR(7),
 	PRIMARY KEY (perm_number, course_number),
-	FOREIGN KEY (perm_number) REFERENCES Students,
+	FOREIGN KEY (perm_number) REFERENCES Student_Is_In,
 	FOREIGN KEY (course_number) REFERENCES Courses	
 );
 CREATE TABLE Past_Courses (
@@ -46,7 +46,7 @@ CREATE TABLE Past_Courses (
 	course_number CHAR(7),
 	grade CHAR(2),
 	PRIMARY KEY (perm_number, course_number),
-	FOREIGN KEY (perm_number) REFERENCES Students,
+	FOREIGN KEY (perm_number) REFERENCES Student_Is_In,
 	FOREIGN KEY (course_number) REFERENCES Courses	
 );
 CREATE TABLE Prerequisites (
@@ -54,7 +54,7 @@ CREATE TABLE Prerequisites (
 	prereq_course CHAR(7),
 	PRIMARY KEY (course_number, prereq_course),
 	FOREIGN KEY (course_number) References Courses,
-	FOREIGN KEY (course_number) References Courses(course_number)
+	FOREIGN KEY (prereq_course) References Courses(course_number)
 );
 CREATE TABLE Offered (
 	course_number CHAR(7),
