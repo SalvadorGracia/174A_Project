@@ -1,3 +1,25 @@
+DROP TABLE Course_Catalog CASCADE CONSTRAINT;
+DROP TABLE Department CASCADE CONSTRAINT;
+DROP TABLE Major CASCADE CONSTRAINT;
+DROP TABLE Student_Is_In CASCADE CONSTRAINT;
+DROP TABLE Course_Offering CASCADE CONSTRAINT;
+DROP TABLE Current_Courses CASCADE CONSTRAINT;
+DROP TABLE Past_Courses CASCADE CONSTRAINT;
+DROP TABLE Prerequisites CASCADE CONSTRAINT;
+DROP TABLE Mandatory_Courses CASCADE CONSTRAINT;
+DROP TABLE Elective_Courses CASCADE CONSTRAINT;
+DROP TABLE Manages CASCADE CONSTRAINT;
+
+CREATE TABLE Course_Catalog (
+	course_number CHAR(7) PRIMARY KEY
+);
+CREATE TABLE Department (
+	d_name CHAR(250) PRIMARY KEY
+);
+CREATE TABLE Major (
+	m_name CHAR(250) PRIMARY KEY,
+	elective_number INTEGER
+);
 CREATE TABLE Student_Is_In (
 	perm_number CHAR(7) PRIMARY KEY,
     	s_name CHAR(250),
@@ -20,16 +42,6 @@ CREATE TABLE Course_Offering (
 	time_slot CHAR(250),
 	FOREIGN KEY (course_number) REFERENCES Course_Catalog
 );
-CREATE TABLE Course_Catalog (
-	course_number CHAR(7) PRIMARY KEY
-);
-CREATE TABLE Department (
-	d_name CHAR(250) PRIMARY KEY
-);
-CREATE TABLE Major (
-	m_name CHAR(250) PRIMARY KEY,
-	elective_number INTEGER
-);
 CREATE TABLE Current_Courses (
 	perm_number CHAR(7),
 	enrollment_code INTEGER,
@@ -39,7 +51,7 @@ CREATE TABLE Current_Courses (
 );
 CREATE TABLE Past_Courses (
 	perm_number CHAR(7),
-	enrollment_code CHAR(7),
+	enrollment_code INTEGER,
 	grade CHAR(2),
 	PRIMARY KEY (perm_number, enrollment_code),
 	FOREIGN KEY (perm_number) REFERENCES Student_Is_In,
@@ -72,4 +84,4 @@ CREATE TABLE Manages (
 	PRIMARY KEY (d_name, m_name),
 	FOREIGN KEY (d_name) REFERENCES Department,
 	FOREIGN KEY (m_name) REFERENCES Major
-);
+)
