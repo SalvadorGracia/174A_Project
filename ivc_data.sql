@@ -15,13 +15,13 @@ CREATE TABLE Department (
 	d_name CHAR(50) PRIMARY KEY
 );
 CREATE TABLE Major (
-	m_name CHAR(100) PRIMARY KEY,
+	m_name CHAR(50) PRIMARY KEY,
 	elective_number INTEGER
 );
 CREATE TABLE Student_Is_In (
 	perm_number CHAR(5) PRIMARY KEY,
     s_name CHAR(50),
-	address CHAR(100),
+	address CHAR(50),
 	d_name CHAR(50),
     m_name CHAR(50),
     pin CHAR(5),
@@ -35,7 +35,7 @@ CREATE TABLE Course_Offering (
 	p_name CHAR(20),
     max_enrollment INTEGER,
     time_location CHAR(25),
-	title CHAR(100),
+	title CHAR(50),
     PRIMARY KEY (enrollment_code, year_quarter),
 	FOREIGN KEY (course_code) REFERENCES Course_Catalog
 );
@@ -56,7 +56,7 @@ CREATE TABLE Prerequisite (
 	FOREIGN KEY (prereq_course) References Course_Catalog(course_code)
 );
 CREATE TABLE Major_Requirement (
-	m_name CHAR(100),
+	m_name CHAR(50),
 	course_code CHAR(7),
     requirement_type CHAR(10),
 	PRIMARY KEY (m_name, course_code),
@@ -64,8 +64,8 @@ CREATE TABLE Major_Requirement (
 	FOREIGN KEY (course_code) REFERENCES Course_Catalog
 );
 CREATE TABLE Manages (
-	d_name CHAR(100),
-	m_name CHAR(100),
+	d_name CHAR(50),
+	m_name CHAR(50),
 	PRIMARY KEY (d_name, m_name),
 	FOREIGN KEY (d_name) REFERENCES Department,
 	FOREIGN KEY (m_name) REFERENCES Major
