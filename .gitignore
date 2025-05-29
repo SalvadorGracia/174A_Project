@@ -1,8 +1,10 @@
-# Default ignored files
+# Ignored IJ files
 /shelf/
 /.idea/
+ivc.iml
 # Environment-dependent path to Maven home directory
 /mavenHomeManager.xml
+
 # Enviroment Variable
 .env
 # Wallet
