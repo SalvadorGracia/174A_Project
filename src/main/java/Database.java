@@ -1,4 +1,5 @@
 package src.main.java;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,9 +13,7 @@ import java.sql.PreparedStatement;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-// This method creates a database connection using
-// oracle.jdbc.pool.OracleDataSource.
-public class App {
+public class Database {
     static Dotenv dotenv = Dotenv.load();
     final static String DB_URL = dotenv.get("DB_URL");
     final static String DB_USER = dotenv.get("DB_USER");
