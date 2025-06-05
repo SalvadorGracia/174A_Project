@@ -35,14 +35,16 @@ public class GUI extends JFrame {
         // Create panels for each "page"
         JPanel mainPage = createMainPage();
         JPanel tablesPage = createTablesPage();
-        JPanel addStudentPage = createAddStudentPage(); // New page for number input
+        JPanel addStudentPage = createAddStudentPage(); 
         JPanel dropStudentPage = createDropStudentPage();
+        JPanel studentCoursesPage = createStudentCoursesPage();
         
         // Add panels to card layout
         cardPanel.add(mainPage, "Main");
         cardPanel.add(tablesPage, "Tables");
-        cardPanel.add(addStudentPage, "NumberInput");
-        cardPanel.add(dropStudentPage, "NumberInput2");
+        cardPanel.add(addStudentPage, "AddStudent");
+        cardPanel.add(dropStudentPage, "DropStudent");
+        cardPanel.add(studentCoursesPage, "StudentCourses");
         
         // Add card panel to frame
         add(cardPanel);
@@ -74,18 +76,24 @@ public class GUI extends JFrame {
         styleButton(viewTablesButton);
         
         // New button to navigate to number input page
-        JButton enterNumberButton = new JButton("Add Student To Course");
-        enterNumberButton.addActionListener(e -> cardLayout.show(cardPanel, "NumberInput"));
-        styleButton(enterNumberButton);
+        JButton addStudentButton = new JButton("Add Student To Course");
+        addStudentButton.addActionListener(e -> cardLayout.show(cardPanel, "AddStudent"));
+        styleButton(addStudentButton);
 
         // New button to navigate to number input page
-        JButton enterNumberButton2 = new JButton("Drop Student To Course");
-        enterNumberButton2.addActionListener(e -> cardLayout.show(cardPanel, "NumberInput2"));
-        styleButton(enterNumberButton2);
+        JButton dropStudentButton = new JButton("Drop Student To Course");
+        dropStudentButton.addActionListener(e -> cardLayout.show(cardPanel, "DropStudent"));
+        styleButton(dropStudentButton);
+
+        // Button to navigate to list student courses page
+        JButton listCoursesButton = new JButton("List Student's Courses");
+        listCoursesButton.addActionListener(e -> cardLayout.show(cardPanel, "StudentCourses"));
+        styleButton(listCoursesButton);
         
         buttonPanel.add(viewTablesButton);
-        buttonPanel.add(enterNumberButton);
-        buttonPanel.add(enterNumberButton2);
+        buttonPanel.add(addStudentButton);
+        buttonPanel.add(dropStudentButton);
+        buttonPanel.add(listCoursesButton);
         
         // Center the buttons
         JPanel centerPanel = new JPanel(new GridBagLayout());
@@ -98,6 +106,74 @@ public class GUI extends JFrame {
     private void styleButton(JButton button) {
         button.setPreferredSize(new Dimension(300, 60));
         button.setFont(new Font("Arial", Font.PLAIN, 18));
+    }
+
+    private JPanel createStudentCoursesPage() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Back button
+        JButton backButton = new JButton("Back to Main Menu");
+        backButton.addActionListener(e -> cardLayout.show(cardPanel, "Main"));
+        
+        // Input panel
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // First input: 5-digit number
+        JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
+        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        JTextField numberInputField = new JTextField(15);
+        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        // Input validation - only allow digits and limit to 5 characters
+        numberInputField.setDocument(new PlainDocument() {
+            @Override
+            public void insertString(int offs, String str, AttributeSet a) 
+                throws BadLocationException {
+                if (str == null) return;
+                
+                // Only allow digits
+                if (str.matches("\\d+") && getLength() + str.length() <= 5) {
+                    super.insertString(offs, str, a);
+                }
+            }
+        });
+        
+        // Submit button
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            String numberText = numberInputField.getText().trim();
+            boolean numberValid = handleNumberSubmission(numberText);
+
+            if (numberValid) {
+                JOptionPane.showMessageDialog(this, 
+                    "Inputs are valid:\nNumber: " + numberText, 
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        
+        // Add components to input panel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        inputPanel.add(numberLabel, gbc);
+        
+        gbc.gridy = 1;
+        inputPanel.add(numberInputField, gbc);
+        
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.CENTER;
+        inputPanel.add(submitButton, gbc);
+        
+        // Add components to main panel
+        panel.add(backButton, BorderLayout.NORTH);
+        panel.add(inputPanel, BorderLayout.CENTER);
+        
+        return panel;
     }
     
     private JPanel createAddStudentPage() {
