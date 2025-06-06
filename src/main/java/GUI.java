@@ -21,6 +21,7 @@ public class GUI extends JFrame {
     private OracleConnection connection;
     private CardLayout cardLayout;
     private JPanel cardPanel;
+    private Color backgroundColor = new Color(64, 64, 69);
     
     public GUI() {
         
@@ -31,53 +32,41 @@ public class GUI extends JFrame {
         // Create the card layout panel
         cardLayout = new CardLayout(5, 5);
         cardPanel = new JPanel(cardLayout);
+        cardPanel.setBackground(backgroundColor);
         
-        // Create panels for each "page"
-        JPanel mainPage = mainPage();
-        JPanel addStudentPage = addStudentPage(); 
-        JPanel dropStudentPage = dropStudentPage();
-        JPanel studentCoursesPage = studentCoursesPage();
-        JPanel studentPrevQuarterGrade = prevStudentQuarterGrades();
-        JPanel listCourseClasses = listCourseClasses();
-        JPanel enterCourseGrades = enterCourseGrades();
-        JPanel requestTranscript = requestTranscript();
-        JPanel generateMailer = generateMailer();
-        
-        // Add panels to card layout
-        cardPanel.add(mainPage, "Main");
-        cardPanel.add(addStudentPage, "AddStudent");
-        cardPanel.add(dropStudentPage, "DropStudent");
-        cardPanel.add(studentCoursesPage, "StudentCourses");
-        cardPanel.add(studentPrevQuarterGrade, "PrevQuarterGrades");
-        cardPanel.add(listCourseClasses, "CourseClasses");
-        cardPanel.add(enterCourseGrades, "EnterGrades");
-        cardPanel.add(requestTranscript, "RequestTranscript");
-        cardPanel.add(generateMailer, "GenerateMailer");
+        // Create panels for each page and add panels to card layout
+        cardPanel.add(mainPage(), "Main");
+        cardPanel.add(addStudentPage(), "AddStudent");
+        cardPanel.add(dropStudentPage(), "DropStudent");
+        cardPanel.add(studentCoursesPage(), "StudentCourses");
+        cardPanel.add(prevStudentQuarterGrades(), "PrevQuarterGrades");
+        cardPanel.add(listCourseClasses(), "CourseClasses");
+        cardPanel.add(enterCourseGrades(), "EnterGrades");
+        cardPanel.add(requestTranscript(), "RequestTranscript");
+        cardPanel.add(generateMailer(), "GenerateMailer");
         
         // Add card panel to frame
         add(cardPanel);
         
         // Connect to database
         connectToDatabase();
-        
-        // Load initial table data
-        if (tableSelector != null) {
-            loadTableData((String)tableSelector.getSelectedItem());
-        }
     }
     
     private JPanel mainPage() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(backgroundColor);
         
         // Welcome message
         JLabel welcomeLabel = new JLabel("Welcome To Registrar Interface", SwingConstants.CENTER);
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        welcomeLabel.setForeground(Color.WHITE);
+        welcomeLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
         panel.add(welcomeLabel, BorderLayout.NORTH);
         
         // Button panel for main actions
         JPanel buttonPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        buttonPanel.setBackground(backgroundColor);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 100, 20, 100));
-        
+
         // New button to navigate to number input page
         JButton addStudentButton = new JButton("Add Student To Course");
         addStudentButton.addActionListener(e -> cardLayout.show(cardPanel, "AddStudent"));
@@ -129,6 +118,7 @@ public class GUI extends JFrame {
         
         // Center the buttons
         JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setBackground(backgroundColor);
         centerPanel.add(buttonPanel);
         panel.add(centerPanel, BorderLayout.CENTER);
         
@@ -136,12 +126,30 @@ public class GUI extends JFrame {
     }
     
     private void styleButton(JButton button) {
+        // Main button color (yellow background)
+        button.setBackground(new Color(255, 255, 153)); // Light yellow
+        
+        // Darker yellow border
+        button.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(255, 204, 0), 2), // Darker yellow border
+            BorderFactory.createEmptyBorder(10, 20, 10, 20) // Internal padding
+        ));
+
         button.setPreferredSize(new Dimension(300, 60));
-        button.setFont(new Font("Arial", Font.PLAIN, 18));
+        button.setFont(new Font("SansSerif", Font.BOLD, 18));
+        button.setForeground(Color.BLACK);
+
+        // Cursor and size
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(300, 50));
+        
+        // Remove default focus painting
+        button.setFocusPainted(false);
     }
 
     private JPanel studentCoursesPage() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(backgroundColor);
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Back button
@@ -150,16 +158,18 @@ public class GUI extends JFrame {
         
         // Input panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(backgroundColor);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
         // First input: 5-digit number
         JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        numberLabel.setForeground(Color.WHITE);
         
         JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
         // Input validation - only allow digits and limit to 5 characters
         numberInputField.setDocument(new PlainDocument() {
@@ -210,6 +220,7 @@ public class GUI extends JFrame {
     
     private JPanel addStudentPage() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(backgroundColor);
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Back button
@@ -218,16 +229,18 @@ public class GUI extends JFrame {
         
         // Input panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(backgroundColor);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
         // First input: 5-digit number
         JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        numberLabel.setForeground(Color.WHITE);
         
         JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
         // Input validation - only allow digits and limit to 5 characters
         numberInputField.setDocument(new PlainDocument() {
@@ -245,11 +258,12 @@ public class GUI extends JFrame {
         
         // Pattern input label
         JLabel patternLabel = new JLabel("Enter Course Code (2-4 Letters + 1-3 Digits):");
-        patternLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        patternLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        patternLabel.setForeground(Color.WHITE);
         
         // Pattern input field with enhanced validation
         JTextField patternInputField = new JTextField(15);
-        patternInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        patternInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
         //Input Validation for pattern
         patternInputField.setDocument(new PlainDocument() {            
@@ -340,6 +354,7 @@ public class GUI extends JFrame {
 
     private JPanel dropStudentPage() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(backgroundColor);
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Back button
@@ -348,16 +363,18 @@ public class GUI extends JFrame {
         
         // Input panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(backgroundColor);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
         // First input: 5-digit number
         JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        numberLabel.setForeground(Color.WHITE);
         
         JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
         // Input validation - only allow digits and limit to 5 characters
         numberInputField.setDocument(new PlainDocument() {
@@ -375,11 +392,12 @@ public class GUI extends JFrame {
         
         // Pattern input label
         JLabel patternLabel = new JLabel("Enter Course Code (2-4 Letters + 1-3 Digits):");
-        patternLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        
+        patternLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        patternLabel.setForeground(Color.WHITE);
+
         // Pattern input field with enhanced validation
         JTextField patternInputField = new JTextField(15);
-        patternInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        patternInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
         //Input Validation for pattern
         patternInputField.setDocument(new PlainDocument() {            
@@ -470,6 +488,7 @@ public class GUI extends JFrame {
 
     private JPanel prevStudentQuarterGrades() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(backgroundColor);
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Back button
@@ -478,16 +497,18 @@ public class GUI extends JFrame {
         
         // Input panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(backgroundColor);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
         // First input: 5-digit number
         JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        numberLabel.setForeground(Color.WHITE);
         
         JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
         // Input validation - only allow digits and limit to 5 characters
         numberInputField.setDocument(new PlainDocument() {
@@ -538,6 +559,7 @@ public class GUI extends JFrame {
 
     private JPanel listCourseClasses() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(backgroundColor);
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Back button
@@ -546,16 +568,18 @@ public class GUI extends JFrame {
         
         // Input panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(backgroundColor);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
         // First input: 5-digit number
         JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        numberLabel.setForeground(Color.WHITE);
         
         JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
         // Input validation - only allow digits and limit to 5 characters
         numberInputField.setDocument(new PlainDocument() {
@@ -606,6 +630,7 @@ public class GUI extends JFrame {
 
     private JPanel enterCourseGrades() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(backgroundColor);
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Back button
@@ -614,16 +639,18 @@ public class GUI extends JFrame {
         
         // Input panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(backgroundColor);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
         // First input: 5-digit number
         JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        
+        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        numberLabel.setForeground(Color.WHITE);
+
         JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
         // Input validation - only allow digits and limit to 5 characters
         numberInputField.setDocument(new PlainDocument() {
@@ -674,6 +701,7 @@ public class GUI extends JFrame {
 
     private JPanel requestTranscript() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(backgroundColor);
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Back button
@@ -682,16 +710,18 @@ public class GUI extends JFrame {
         
         // Input panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(backgroundColor);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
         // First input: 5-digit number
         JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        
+        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        numberLabel.setForeground(Color.WHITE);
+
         JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
         // Input validation - only allow digits and limit to 5 characters
         numberInputField.setDocument(new PlainDocument() {
@@ -742,6 +772,7 @@ public class GUI extends JFrame {
 
     private JPanel generateMailer() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(backgroundColor);
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Back button
@@ -750,16 +781,18 @@ public class GUI extends JFrame {
         
         // Input panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(backgroundColor);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
         // First input: 5-digit number
         JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        numberLabel.setForeground(Color.WHITE);
         
         JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
         // Input validation - only allow digits and limit to 5 characters
         numberInputField.setDocument(new PlainDocument() {
@@ -847,7 +880,13 @@ public class GUI extends JFrame {
     }
     
     private JPanel viewTablesPage() {
+        // Load initial table data
+        if (tableSelector != null) {
+            loadTableData((String)tableSelector.getSelectedItem());
+        }
+
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(backgroundColor);
         
         // Initialize components for tables page
         table = new JTable();
@@ -865,6 +904,7 @@ public class GUI extends JFrame {
         
         // Layout for tables page
         JPanel topPanel = new JPanel();
+        topPanel.setBackground(backgroundColor);
         topPanel.add(backButton);
         topPanel.add(new JLabel("Select Table:"));
         topPanel.add(tableSelector);
