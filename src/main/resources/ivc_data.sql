@@ -11,13 +11,16 @@ DROP TABLE Student_Is_In CASCADE CONSTRAINT;
 CREATE TABLE Course_Catalog (
     course_code CHAR(7) PRIMARY KEY
 );
+
 CREATE TABLE Department (
     d_name CHAR(50) PRIMARY KEY
 );
+
 CREATE TABLE Major (
     m_name CHAR(50) PRIMARY KEY,
     elective_number INTEGER
 );
+
 CREATE TABLE Student_Is_In (
     perm_number CHAR(5) PRIMARY KEY,
     s_name CHAR(50),
@@ -25,9 +28,10 @@ CREATE TABLE Student_Is_In (
     d_name CHAR(50),
     m_name CHAR(50),
     pin CHAR(5),
-    FOREIGN KEY (d_name) REFERENCES Department,
-    FOREIGN KEY (m_name) REFERENCES Major
+    FOREIGN KEY (d_name) REFERENCES Department ON DELETE SET NULL,
+    FOREIGN KEY (m_name) REFERENCES Major ON DELETE SET NULL
 );
+
 CREATE TABLE Course_Offering (
     course_code CHAR(7),
     enrollment_code INTEGER,
@@ -37,46 +41,47 @@ CREATE TABLE Course_Offering (
     time_location CHAR(25),
     title CHAR(50),
     PRIMARY KEY (enrollment_code, year_quarter),
-    FOREIGN KEY (course_code) REFERENCES Course_Catalog
+    FOREIGN KEY (course_code) REFERENCES Course_Catalog ON DELETE SET NULL
 );
+
 CREATE TABLE Enrollment (
     perm_number CHAR(7),
     enrollment_code INTEGER,
     year_quarter CHAR(10),
     grade CHAR(2),
     PRIMARY KEY (perm_number, enrollment_code, year_quarter),
-    FOREIGN KEY (perm_number) REFERENCES Student_Is_In,
-    FOREIGN KEY (enrollment_code, year_quarter) REFERENCES Course_Offering
+    FOREIGN KEY (perm_number) REFERENCES Student_Is_In ON DELETE CASCADE,
+    FOREIGN KEY (enrollment_code, year_quarter) REFERENCES Course_Offering ON DELETE CASCADE
 );
+
 CREATE TABLE Prerequisite (
     course_code CHAR(7),
     prereq_course CHAR(7),
     PRIMARY KEY (course_code, prereq_course),
-    FOREIGN KEY (course_code) References Course_Catalog,
-    FOREIGN KEY (prereq_course) References Course_Catalog(course_code)
+    FOREIGN KEY (course_code) References Course_Catalog ON DELETE CASCADE,
+    FOREIGN KEY (prereq_course) References Course_Catalog(course_code) ON DELETE CASCADE
 );
+
 CREATE TABLE Major_Requirement (
     m_name CHAR(50),
     course_code CHAR(7),
     requirement_type CHAR(10),
     PRIMARY KEY (m_name, course_code),
-    FOREIGN KEY (m_name) REFERENCES Major,
-    FOREIGN KEY (course_code) REFERENCES Course_Catalog
+    FOREIGN KEY (m_name) REFERENCES Major ON DELETE CASCADE,
+    FOREIGN KEY (course_code) REFERENCES Course_Catalog ON DELETE CASCADE
 );
+
 CREATE TABLE Manages (
     d_name CHAR(50),
     m_name CHAR(50),
     PRIMARY KEY (d_name, m_name),
-    FOREIGN KEY (d_name) REFERENCES Department,
-    FOREIGN KEY (m_name) REFERENCES Major
+    FOREIGN KEY (d_name) REFERENCES Department ON DELETE CASCADE,
+    FOREIGN KEY (m_name) REFERENCES Major ON DELETE CASCADE
 );
 
 -- Insert Departments
 INSERT INTO department (d_name) VALUES ('CS');
 INSERT INTO department (d_name) VALUES ('ECE');
-
-SELECT *
-FROM department;
 
 -- Insert Students
 INSERT INTO student_is_in (perm_number, s_name, address, d_name, pin) VALUES ('12345', 'Alfred Hitchcock', '6667 El Colegio #40', 'CS', '12345');
@@ -96,9 +101,6 @@ INSERT INTO student_is_in (perm_number, s_name, address, d_name, pin) VALUES ('5
 INSERT INTO student_is_in (perm_number, s_name, address, d_name, pin) VALUES ('82452', 'Olive Stoner', '6689 El Colegio #151', 'ECE', '82452');
 INSERT INTO student_is_in (perm_number, s_name, address, d_name, pin) VALUES ('18221', 'Pit Wilson', '911 State St', 'ECE', '18221');
 
-SELECT *
-FROM student_is_in;
-
 -- Insert Courses Into Catalog
 INSERT INTO course_catalog (course_code) VALUES ('CS174');
 INSERT INTO course_catalog (course_code) VALUES ('CS170');
@@ -113,9 +115,6 @@ INSERT INTO course_catalog (course_code) VALUES ('EC140');
 INSERT INTO course_catalog (course_code) VALUES ('EC015');
 INSERT INTO course_catalog (course_code) VALUES ('EC010');
 
-SELECT *
-FROM course_catalog;
-
 -- Insert Prerequisites
 INSERT INTO prerequisite (course_code, prereq_course) VALUES ('CS174', 'CS130');
 INSERT INTO prerequisite (course_code, prereq_course) VALUES ('CS174', 'CS026');
@@ -124,9 +123,6 @@ INSERT INTO prerequisite (course_code, prereq_course) VALUES ('CS170', 'CS154');
 INSERT INTO prerequisite (course_code, prereq_course) VALUES ('CS160', 'CS026');
 INSERT INTO prerequisite (course_code, prereq_course) VALUES ('EC154', 'CS026');
 INSERT INTO prerequisite (course_code, prereq_course) VALUES ('EC154', 'EC152');
-
-SELECT *
-FROM prerequisite;
 
 -- 25 Spring (25 S) Offerings
 INSERT INTO course_offering (course_code, enrollment_code, year_quarter, p_name, max_enrollment, time_location) VALUES ('CS174', '12345', '25 S', 'Venus', 5, 'TR10-12 Psycho 1132');
@@ -166,5 +162,4 @@ INSERT INTO course_offering (course_code, enrollment_code, year_quarter, p_name,
 INSERT INTO course_offering (course_code, enrollment_code, year_quarter, p_name, max_enrollment, time_location) VALUES ('EC015', '71631', '24 S', 'Moon', 15, 'TR2-4 Engr 1124');
 INSERT INTO course_offering (course_code, enrollment_code, year_quarter, p_name, max_enrollment, time_location) VALUES ('EC010', '82612', '24 S', 'Star', 15, 'MWF8-9 Physics 4004');
 
-SELECT *
-FROM course_offering;
+COMMIT;

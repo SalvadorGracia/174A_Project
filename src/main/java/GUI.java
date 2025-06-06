@@ -44,6 +44,7 @@ public class GUI extends JFrame {
         cardPanel.add(enterCourseGrades(), "EnterGrades");
         cardPanel.add(requestTranscript(), "RequestTranscript");
         cardPanel.add(generateMailer(), "GenerateMailer");
+        cardPanel.add(viewTablesPage(), "Tables");
         
         // Add card panel to frame
         add(cardPanel);
@@ -106,6 +107,10 @@ public class GUI extends JFrame {
         JButton generateMailer = new JButton("Generate Mailer");
         generateMailer.addActionListener(e -> cardLayout.show(cardPanel, "GenerateMailer"));
         styleButton(generateMailer);
+
+        JButton viewTables = new JButton("View Tables");
+        viewTables.addActionListener(e -> cardLayout.show(cardPanel, "Tables"));
+        styleButton(viewTables);
         
         buttonPanel.add(addStudentButton);
         buttonPanel.add(dropStudentButton);
@@ -115,6 +120,7 @@ public class GUI extends JFrame {
         buttonPanel.add(enterCourseGrades);
         buttonPanel.add(requestTranscript);
         buttonPanel.add(generateMailer);
+        buttonPanel.add(viewTables);
         
         // Center the buttons
         JPanel centerPanel = new JPanel(new GridBagLayout());
@@ -906,7 +912,10 @@ public class GUI extends JFrame {
         JPanel topPanel = new JPanel();
         topPanel.setBackground(backgroundColor);
         topPanel.add(backButton);
-        topPanel.add(new JLabel("Select Table:"));
+        JLabel tableLabel = new JLabel("Select Table:");
+        tableLabel.setForeground(Color.WHITE);
+        topPanel.add(tableLabel);
+        topPanel.setForeground(Color.WHITE);
         topPanel.add(tableSelector);
         
         panel.add(topPanel, BorderLayout.NORTH);
