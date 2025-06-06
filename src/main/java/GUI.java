@@ -152,77 +152,6 @@ public class GUI extends JFrame {
         // Remove default focus painting
         button.setFocusPainted(false);
     }
-
-    private JPanel studentCoursesPage() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(backgroundColor);
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
-        // Back button
-        JButton backButton = new JButton("Back to Main Menu");
-        backButton.addActionListener(e -> cardLayout.show(cardPanel, "Main"));
-        
-        // Input panel
-        JPanel inputPanel = new JPanel(new GridBagLayout());
-        inputPanel.setBackground(backgroundColor);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.anchor = GridBagConstraints.WEST;
-
-        // First input: 5-digit number
-        JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        numberLabel.setForeground(Color.WHITE);
-        
-        JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        
-        // Input validation - only allow digits and limit to 5 characters
-        numberInputField.setDocument(new PlainDocument() {
-            @Override
-            public void insertString(int offs, String str, AttributeSet a) 
-                throws BadLocationException {
-                if (str == null) return;
-                
-                // Only allow digits
-                if (str.matches("\\d+") && getLength() + str.length() <= 5) {
-                    super.insertString(offs, str, a);
-                }
-            }
-        });
-        
-        // Submit button
-        JButton submitButton = new JButton("Submit");
-        submitButton.addActionListener(e -> {
-            String numberText = numberInputField.getText().trim();
-            boolean numberValid = validPERMNumber(numberText);
-
-            if (numberValid) {
-                JOptionPane.showMessageDialog(this, 
-                    "Inputs are valid:\nNumber: " + numberText, 
-                    "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-
-        
-        // Add components to input panel
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        inputPanel.add(numberLabel, gbc);
-        
-        gbc.gridy = 1;
-        inputPanel.add(numberInputField, gbc);
-        
-        gbc.gridy = 4;
-        gbc.anchor = GridBagConstraints.CENTER;
-        inputPanel.add(submitButton, gbc);
-        
-        // Add components to main panel
-        panel.add(backButton, BorderLayout.NORTH);
-        panel.add(inputPanel, BorderLayout.CENTER);
-        
-        return panel;
-    }
     
     private JPanel addStudentPage() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -492,6 +421,76 @@ public class GUI extends JFrame {
         return panel;
     }
 
+    private JPanel studentCoursesPage() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(backgroundColor);
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Back button
+        JButton backButton = new JButton("Back to Main Menu");
+        backButton.addActionListener(e -> cardLayout.show(cardPanel, "Main"));
+        
+        // Input panel
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBackground(backgroundColor);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // First input: 5-digit number
+        JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
+        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        numberLabel.setForeground(Color.WHITE);
+        
+        JTextField numberInputField = new JTextField(15);
+        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        
+        // Input validation - only allow digits and limit to 5 characters
+        numberInputField.setDocument(new PlainDocument() {
+            @Override
+            public void insertString(int offs, String str, AttributeSet a) 
+                throws BadLocationException {
+                if (str == null) return;
+                
+                // Only allow digits
+                if (str.matches("\\d+") && getLength() + str.length() <= 5) {
+                    super.insertString(offs, str, a);
+                }
+            }
+        });
+        
+        // Submit button
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            String numberText = numberInputField.getText().trim();
+            boolean numberValid = validPERMNumber(numberText);
+
+            if (numberValid) {
+                JOptionPane.showMessageDialog(this, 
+                    "Inputs are valid:\nNumber: " + numberText, 
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        
+        // Add components to input panel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        inputPanel.add(numberLabel, gbc);
+        
+        gbc.gridy = 1;
+        inputPanel.add(numberInputField, gbc);
+        
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.CENTER;
+        inputPanel.add(submitButton, gbc);
+        
+        // Add components to main panel
+        panel.add(backButton, BorderLayout.NORTH);
+        panel.add(inputPanel, BorderLayout.CENTER);
+        
+        return panel;
+    }
+    
     private JPanel prevStudentQuarterGrades() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(backgroundColor);
@@ -579,24 +578,57 @@ public class GUI extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
-        // First input: 5-digit number
-        JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        numberLabel.setForeground(Color.WHITE);
+        // Pattern input label
+        JLabel patternLabel = new JLabel("Enter Course Code (2-4 Letters + 1-3 Digits):");
+        patternLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        patternLabel.setForeground(Color.WHITE);
+
+        // Pattern input field with enhanced validation
+        JTextField patternInputField = new JTextField(15);
+        patternInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
-        JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        
-        // Input validation - only allow digits and limit to 5 characters
-        numberInputField.setDocument(new PlainDocument() {
+        //Input Validation for pattern
+        patternInputField.setDocument(new PlainDocument() {            
             @Override
-            public void insertString(int offs, String str, AttributeSet a) 
-                throws BadLocationException {
-                if (str == null) return;
-                
-                // Only allow digits
-                if (str.matches("\\d+") && getLength() + str.length() <= 5) {
+            public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+                if (str == null || str.isEmpty()) return;
+
+                String currentText = getText(0, getLength());
+                String newText = currentText.substring(0, offs) + str + currentText.substring(offs);
+
+                if (newText.length() > 7) return;
+
+                // Count letters and digits
+                int letterCount = newText.replaceAll("[^A-Za-z]", "").length();
+                int digitCount = newText.replaceAll("[^0-9]", "").length();
+
+                // Check order: letters must come before digits
+                if (!newText.matches("^[A-Za-z]*[0-9]*$")) return;
+
+                // Enforce 2-4 letters first
+                if (letterCount > 4) return;
+                if (digitCount > 3) return;
+
+                // If inserting a digit before having at least 2 letters, block it
+                if (str.matches("[0-9]+") && letterCount < 2) return;
+
+                // All valid, insert (convert letters to uppercase)
+                if (str.matches("[A-Za-z]+")) {
+                    super.insertString(offs, str.toUpperCase(), a);
+                } else {
                     super.insertString(offs, str, a);
+                }
+            }
+            
+            @Override
+            public void remove(int offs, int len) throws BadLocationException {
+                String currentText = getText(0, getLength());
+                String remainingText = currentText.substring(0, offs) + currentText.substring(offs + len);
+                
+                // Check if removal would leave us with less than 2 letters
+                int remainingLetters = remainingText.replaceAll("[^A-Za-z]", "").length();
+                if (remainingLetters >= 2 || remainingLetters == remainingText.length()) {
+                    super.remove(offs, len);
                 }
             }
         });
@@ -604,24 +636,22 @@ public class GUI extends JFrame {
         // Submit button
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String numberText = numberInputField.getText().trim();
-            boolean numberValid = validPERMNumber(numberText);
+            String pattern = patternInputField.getText().trim();
+            boolean patternValid = validCourseCode(pattern);
 
-            if (numberValid) {
-                JOptionPane.showMessageDialog(this, 
-                    "Inputs are valid:\nNumber: " + numberText, 
+            if (patternValid) {
+                JOptionPane.showMessageDialog(this, "Inputs are valid:\nCode: " + pattern, 
                     "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         });
-
         
         // Add components to input panel
         gbc.gridx = 0;
         gbc.gridy = 0;
-        inputPanel.add(numberLabel, gbc);
+        inputPanel.add(patternLabel, gbc);
         
         gbc.gridy = 1;
-        inputPanel.add(numberInputField, gbc);
+        inputPanel.add(patternInputField, gbc);
         
         gbc.gridy = 4;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -650,24 +680,57 @@ public class GUI extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
-        // First input: 5-digit number
-        JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        numberLabel.setForeground(Color.WHITE);
+        // Pattern input label
+        JLabel patternLabel = new JLabel("Enter Course Code (2-4 Letters + 1-3 Digits):");
+        patternLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        patternLabel.setForeground(Color.WHITE);
 
-        JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        // Pattern input field with enhanced validation
+        JTextField patternInputField = new JTextField(15);
+        patternInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         
-        // Input validation - only allow digits and limit to 5 characters
-        numberInputField.setDocument(new PlainDocument() {
+        //Input Validation for pattern
+        patternInputField.setDocument(new PlainDocument() {            
             @Override
-            public void insertString(int offs, String str, AttributeSet a) 
-                throws BadLocationException {
-                if (str == null) return;
-                
-                // Only allow digits
-                if (str.matches("\\d+") && getLength() + str.length() <= 5) {
+            public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+                if (str == null || str.isEmpty()) return;
+
+                String currentText = getText(0, getLength());
+                String newText = currentText.substring(0, offs) + str + currentText.substring(offs);
+
+                if (newText.length() > 7) return;
+
+                // Count letters and digits
+                int letterCount = newText.replaceAll("[^A-Za-z]", "").length();
+                int digitCount = newText.replaceAll("[^0-9]", "").length();
+
+                // Check order: letters must come before digits
+                if (!newText.matches("^[A-Za-z]*[0-9]*$")) return;
+
+                // Enforce 2-4 letters first
+                if (letterCount > 4) return;
+                if (digitCount > 3) return;
+
+                // If inserting a digit before having at least 2 letters, block it
+                if (str.matches("[0-9]+") && letterCount < 2) return;
+
+                // All valid, insert (convert letters to uppercase)
+                if (str.matches("[A-Za-z]+")) {
+                    super.insertString(offs, str.toUpperCase(), a);
+                } else {
                     super.insertString(offs, str, a);
+                }
+            }
+            
+            @Override
+            public void remove(int offs, int len) throws BadLocationException {
+                String currentText = getText(0, getLength());
+                String remainingText = currentText.substring(0, offs) + currentText.substring(offs + len);
+                
+                // Check if removal would leave us with less than 2 letters
+                int remainingLetters = remainingText.replaceAll("[^A-Za-z]", "").length();
+                if (remainingLetters >= 2 || remainingLetters == remainingText.length()) {
+                    super.remove(offs, len);
                 }
             }
         });
@@ -675,24 +738,22 @@ public class GUI extends JFrame {
         // Submit button
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String numberText = numberInputField.getText().trim();
-            boolean numberValid = validPERMNumber(numberText);
+            String pattern = patternInputField.getText().trim();
+            boolean patternValid = validCourseCode(pattern);
 
-            if (numberValid) {
-                JOptionPane.showMessageDialog(this, 
-                    "Inputs are valid:\nNumber: " + numberText, 
+            if (patternValid) {
+                JOptionPane.showMessageDialog(this, "Inputs are valid:\nCode: " + pattern, 
                     "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         });
-
         
         // Add components to input panel
         gbc.gridx = 0;
         gbc.gridy = 0;
-        inputPanel.add(numberLabel, gbc);
+        inputPanel.add(patternLabel, gbc);
         
         gbc.gridy = 1;
-        inputPanel.add(numberInputField, gbc);
+        inputPanel.add(patternInputField, gbc);
         
         gbc.gridy = 4;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -780,71 +841,99 @@ public class GUI extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(backgroundColor);
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
+
         // Back button
         JButton backButton = new JButton("Back to Main Menu");
         backButton.addActionListener(e -> cardLayout.show(cardPanel, "Main"));
-        
-        // Input panel
-        JPanel inputPanel = new JPanel(new GridBagLayout());
-        inputPanel.setBackground(backgroundColor);
+
+        // Main content panel
+        JPanel contentPanel = new JPanel(new GridBagLayout());
+        contentPanel.setBackground(backgroundColor);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
-        // First input: 5-digit number
-        JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
-        numberLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        numberLabel.setForeground(Color.WHITE);
-        
-        JTextField numberInputField = new JTextField(15);
-        numberInputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        
-        // Input validation - only allow digits and limit to 5 characters
-        numberInputField.setDocument(new PlainDocument() {
-            @Override
-            public void insertString(int offs, String str, AttributeSet a) 
-                throws BadLocationException {
-                if (str == null) return;
-                
-                // Only allow digits
-                if (str.matches("\\d+") && getLength() + str.length() <= 5) {
-                    super.insertString(offs, str, a);
+        // Title (Admin-only function)
+        JLabel titleLabel = new JLabel("Generate Grade Mailers for All Students");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+        titleLabel.setForeground(Color.WHITE);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        contentPanel.add(titleLabel, gbc);
+
+        // Warning label (only for Registrar/Admin)
+        JLabel warningLabel = new JLabel("Note: This will email grades to all students for the current quarter.");
+        warningLabel.setFont(new Font("SansSerif", Font.ITALIC, 12));
+        warningLabel.setForeground(Color.YELLOW);
+        gbc.gridy = 1;
+        contentPanel.add(warningLabel, gbc);
+
+        // Generate button
+        JButton generateButton = new JButton("Generate and Send Emails");
+        generateButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Send grade emails to ALL students for the current quarter?",
+                "Confirm Bulk Email",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                boolean success = sendGradeEmails(); // Call backend method
+                if (success) {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Grade emails sent successfully!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+                } else {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Failed to send emails. Check logs.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
                 }
             }
         });
-        
-        // Submit button
-        JButton submitButton = new JButton("Submit");
-        submitButton.addActionListener(e -> {
-            String numberText = numberInputField.getText().trim();
-            boolean numberValid = validPERMNumber(numberText);
 
-            if (numberValid) {
-                JOptionPane.showMessageDialog(this, 
-                    "Inputs are valid:\nNumber: " + numberText, 
-                    "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-
-        
-        // Add components to input panel
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        inputPanel.add(numberLabel, gbc);
-        
-        gbc.gridy = 1;
-        inputPanel.add(numberInputField, gbc);
-        
-        gbc.gridy = 4;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        inputPanel.add(submitButton, gbc);
-        
+        contentPanel.add(generateButton, gbc);
+
         // Add components to main panel
         panel.add(backButton, BorderLayout.NORTH);
-        panel.add(inputPanel, BorderLayout.CENTER);
-        
+        panel.add(contentPanel, BorderLayout.CENTER);
+
         return panel;
+    }
+
+    // Backend method to send emails (mock implementation)
+    private boolean sendGradeEmails() {
+        try {
+            // 1. Query database for students + their current quarter grades
+            // Example SQL:
+            // SELECT s.perm_number, s.name, s.email, c.course_number, g.grade 
+            // FROM Students s
+            // JOIN Enrollments e ON s.perm_number = e.perm_number
+            // JOIN Courses c ON e.course_code = c.enrollment_code
+            // JOIN Grades g ON g.enrollment_id = e.enrollment_id
+            // WHERE c.quarter = 'Fall' AND c.year = '2024';
+
+            // 2. For each student, generate an email:
+            // String subject = "Your Grades for Fall 2024";
+            // String body = "Dear " + studentName + ",\n\nYour grades:\n- " + course1 + ": " + grade1 + "\n...";
+
+            // 3. Send email via SMTP/API (e.g., JavaMail, SendGrid)
+            // Ensure no PINs or sensitive data are leaked!
+
+            return true; // Simulate success
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private boolean validCourseCode(String course_code) {
