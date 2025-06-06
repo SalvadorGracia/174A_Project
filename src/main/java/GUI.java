@@ -29,22 +29,30 @@ public class GUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // Create the card layout panel
-        cardLayout = new CardLayout();
+        cardLayout = new CardLayout(5, 5);
         cardPanel = new JPanel(cardLayout);
         
         // Create panels for each "page"
-        JPanel mainPage = createMainPage();
-        JPanel tablesPage = createTablesPage();
-        JPanel addStudentPage = createAddStudentPage(); 
-        JPanel dropStudentPage = createDropStudentPage();
-        JPanel studentCoursesPage = createStudentCoursesPage();
+        JPanel mainPage = mainPage();
+        JPanel addStudentPage = addStudentPage(); 
+        JPanel dropStudentPage = dropStudentPage();
+        JPanel studentCoursesPage = studentCoursesPage();
+        JPanel studentPrevQuarterGrade = prevStudentQuarterGrades();
+        JPanel listCourseClasses = listCourseClasses();
+        JPanel enterCourseGrades = enterCourseGrades();
+        JPanel requestTranscript = requestTranscript();
+        JPanel generateMailer = generateMailer();
         
         // Add panels to card layout
         cardPanel.add(mainPage, "Main");
-        cardPanel.add(tablesPage, "Tables");
         cardPanel.add(addStudentPage, "AddStudent");
         cardPanel.add(dropStudentPage, "DropStudent");
         cardPanel.add(studentCoursesPage, "StudentCourses");
+        cardPanel.add(studentPrevQuarterGrade, "PrevQuarterGrades");
+        cardPanel.add(listCourseClasses, "CourseClasses");
+        cardPanel.add(enterCourseGrades, "EnterGrades");
+        cardPanel.add(requestTranscript, "RequestTranscript");
+        cardPanel.add(generateMailer, "GenerateMailer");
         
         // Add card panel to frame
         add(cardPanel);
@@ -58,22 +66,17 @@ public class GUI extends JFrame {
         }
     }
     
-    private JPanel createMainPage() {
+    private JPanel mainPage() {
         JPanel panel = new JPanel(new BorderLayout());
         
         // Welcome message
-        JLabel welcomeLabel = new JLabel("Welcome to Registrar Interface", SwingConstants.CENTER);
+        JLabel welcomeLabel = new JLabel("Welcome To Registrar Interface", SwingConstants.CENTER);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
         panel.add(welcomeLabel, BorderLayout.NORTH);
         
         // Button panel for main actions
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+        JPanel buttonPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 100, 20, 100));
-        
-        // Button to navigate to tables page
-        JButton viewTablesButton = new JButton("View Database Tables");
-        viewTablesButton.addActionListener(e -> cardLayout.show(cardPanel, "Tables"));
-        styleButton(viewTablesButton);
         
         // New button to navigate to number input page
         JButton addStudentButton = new JButton("Add Student To Course");
@@ -81,19 +84,48 @@ public class GUI extends JFrame {
         styleButton(addStudentButton);
 
         // New button to navigate to number input page
-        JButton dropStudentButton = new JButton("Drop Student To Course");
+        JButton dropStudentButton = new JButton("Drop Student From Course");
         dropStudentButton.addActionListener(e -> cardLayout.show(cardPanel, "DropStudent"));
         styleButton(dropStudentButton);
 
         // Button to navigate to list student courses page
-        JButton listCoursesButton = new JButton("List Student's Courses");
+        JButton listCoursesButton = new JButton("Student's Courses");
         listCoursesButton.addActionListener(e -> cardLayout.show(cardPanel, "StudentCourses"));
         styleButton(listCoursesButton);
         
-        buttonPanel.add(viewTablesButton);
+        // Button to navigate to student's previous quarter grades
+        JButton prevQuarterGradesButton = new JButton("Student's Previous Grades");
+        prevQuarterGradesButton.addActionListener(e -> cardLayout.show(cardPanel, "PrevQuarterGrades"));
+        styleButton(prevQuarterGradesButton);
+
+        // Button to navigate to classes offered for a course
+        JButton listCourseClassesButton = new JButton("Course Offerings");
+        listCourseClassesButton.addActionListener(e -> cardLayout.show(cardPanel, "CourseClasses"));
+        styleButton(listCourseClassesButton);
+
+        // Button to navigate to enter grades for a course
+        JButton enterCourseGrades = new JButton("Enter Course Grades");
+        enterCourseGrades.addActionListener(e -> cardLayout.show(cardPanel, "EnterGrades"));
+        styleButton(enterCourseGrades);
+
+        // Button to navigate to request student's transcript
+        JButton requestTranscript = new JButton("Request Transcript");
+        requestTranscript.addActionListener(e -> cardLayout.show(cardPanel, "RequestTranscript"));
+        styleButton(requestTranscript);
+
+        // Button to navigate to generate mailer
+        JButton generateMailer = new JButton("Generate Mailer");
+        generateMailer.addActionListener(e -> cardLayout.show(cardPanel, "GenerateMailer"));
+        styleButton(generateMailer);
+        
         buttonPanel.add(addStudentButton);
         buttonPanel.add(dropStudentButton);
         buttonPanel.add(listCoursesButton);
+        buttonPanel.add(prevQuarterGradesButton);
+        buttonPanel.add(listCourseClassesButton);
+        buttonPanel.add(enterCourseGrades);
+        buttonPanel.add(requestTranscript);
+        buttonPanel.add(generateMailer);
         
         // Center the buttons
         JPanel centerPanel = new JPanel(new GridBagLayout());
@@ -108,7 +140,7 @@ public class GUI extends JFrame {
         button.setFont(new Font("Arial", Font.PLAIN, 18));
     }
 
-    private JPanel createStudentCoursesPage() {
+    private JPanel studentCoursesPage() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
@@ -147,7 +179,7 @@ public class GUI extends JFrame {
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String numberText = numberInputField.getText().trim();
-            boolean numberValid = handleNumberSubmission(numberText);
+            boolean numberValid = validPERMNumber(numberText);
 
             if (numberValid) {
                 JOptionPane.showMessageDialog(this, 
@@ -176,7 +208,7 @@ public class GUI extends JFrame {
         return panel;
     }
     
-    private JPanel createAddStudentPage() {
+    private JPanel addStudentPage() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
@@ -270,8 +302,8 @@ public class GUI extends JFrame {
         submitButton.addActionListener(e -> {
             String pattern = patternInputField.getText().trim();
             String numberText = numberInputField.getText().trim();
-            boolean numberValid = handleNumberSubmission(numberText);
-            boolean patternValid = handlePatternSubmission(pattern);
+            boolean numberValid = validPERMNumber(numberText);
+            boolean patternValid = validCourseCode(pattern);
 
             if (numberValid && patternValid) {
                 JOptionPane.showMessageDialog(this, 
@@ -306,7 +338,7 @@ public class GUI extends JFrame {
         return panel;
     }
 
-    private JPanel createDropStudentPage() {
+    private JPanel dropStudentPage() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
@@ -400,8 +432,8 @@ public class GUI extends JFrame {
         submitButton.addActionListener(e -> {
             String pattern = patternInputField.getText().trim();
             String numberText = numberInputField.getText().trim();
-            boolean numberValid = handleNumberSubmission(numberText);
-            boolean patternValid = handlePatternSubmission(pattern);
+            boolean numberValid = validPERMNumber(numberText);
+            boolean patternValid = validCourseCode(pattern);
 
             if (numberValid && patternValid) {
                 JOptionPane.showMessageDialog(this, 
@@ -436,34 +468,364 @@ public class GUI extends JFrame {
         return panel;
     }
 
-    private boolean handlePatternSubmission(String pattern) {
-        if (pattern.isEmpty()) {
+    private JPanel prevStudentQuarterGrades() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Back button
+        JButton backButton = new JButton("Back to Main Menu");
+        backButton.addActionListener(e -> cardLayout.show(cardPanel, "Main"));
+        
+        // Input panel
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // First input: 5-digit number
+        JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
+        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        JTextField numberInputField = new JTextField(15);
+        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        // Input validation - only allow digits and limit to 5 characters
+        numberInputField.setDocument(new PlainDocument() {
+            @Override
+            public void insertString(int offs, String str, AttributeSet a) 
+                throws BadLocationException {
+                if (str == null) return;
+                
+                // Only allow digits
+                if (str.matches("\\d+") && getLength() + str.length() <= 5) {
+                    super.insertString(offs, str, a);
+                }
+            }
+        });
+        
+        // Submit button
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            String numberText = numberInputField.getText().trim();
+            boolean numberValid = validPERMNumber(numberText);
+
+            if (numberValid) {
+                JOptionPane.showMessageDialog(this, 
+                    "Inputs are valid:\nNumber: " + numberText, 
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        
+        // Add components to input panel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        inputPanel.add(numberLabel, gbc);
+        
+        gbc.gridy = 1;
+        inputPanel.add(numberInputField, gbc);
+        
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.CENTER;
+        inputPanel.add(submitButton, gbc);
+        
+        // Add components to main panel
+        panel.add(backButton, BorderLayout.NORTH);
+        panel.add(inputPanel, BorderLayout.CENTER);
+        
+        return panel;
+    }
+
+    private JPanel listCourseClasses() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Back button
+        JButton backButton = new JButton("Back to Main Menu");
+        backButton.addActionListener(e -> cardLayout.show(cardPanel, "Main"));
+        
+        // Input panel
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // First input: 5-digit number
+        JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
+        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        JTextField numberInputField = new JTextField(15);
+        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        // Input validation - only allow digits and limit to 5 characters
+        numberInputField.setDocument(new PlainDocument() {
+            @Override
+            public void insertString(int offs, String str, AttributeSet a) 
+                throws BadLocationException {
+                if (str == null) return;
+                
+                // Only allow digits
+                if (str.matches("\\d+") && getLength() + str.length() <= 5) {
+                    super.insertString(offs, str, a);
+                }
+            }
+        });
+        
+        // Submit button
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            String numberText = numberInputField.getText().trim();
+            boolean numberValid = validPERMNumber(numberText);
+
+            if (numberValid) {
+                JOptionPane.showMessageDialog(this, 
+                    "Inputs are valid:\nNumber: " + numberText, 
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        
+        // Add components to input panel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        inputPanel.add(numberLabel, gbc);
+        
+        gbc.gridy = 1;
+        inputPanel.add(numberInputField, gbc);
+        
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.CENTER;
+        inputPanel.add(submitButton, gbc);
+        
+        // Add components to main panel
+        panel.add(backButton, BorderLayout.NORTH);
+        panel.add(inputPanel, BorderLayout.CENTER);
+        
+        return panel;
+    }
+
+    private JPanel enterCourseGrades() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Back button
+        JButton backButton = new JButton("Back to Main Menu");
+        backButton.addActionListener(e -> cardLayout.show(cardPanel, "Main"));
+        
+        // Input panel
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // First input: 5-digit number
+        JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
+        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        JTextField numberInputField = new JTextField(15);
+        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        // Input validation - only allow digits and limit to 5 characters
+        numberInputField.setDocument(new PlainDocument() {
+            @Override
+            public void insertString(int offs, String str, AttributeSet a) 
+                throws BadLocationException {
+                if (str == null) return;
+                
+                // Only allow digits
+                if (str.matches("\\d+") && getLength() + str.length() <= 5) {
+                    super.insertString(offs, str, a);
+                }
+            }
+        });
+        
+        // Submit button
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            String numberText = numberInputField.getText().trim();
+            boolean numberValid = validPERMNumber(numberText);
+
+            if (numberValid) {
+                JOptionPane.showMessageDialog(this, 
+                    "Inputs are valid:\nNumber: " + numberText, 
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        
+        // Add components to input panel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        inputPanel.add(numberLabel, gbc);
+        
+        gbc.gridy = 1;
+        inputPanel.add(numberInputField, gbc);
+        
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.CENTER;
+        inputPanel.add(submitButton, gbc);
+        
+        // Add components to main panel
+        panel.add(backButton, BorderLayout.NORTH);
+        panel.add(inputPanel, BorderLayout.CENTER);
+        
+        return panel;
+    }
+
+    private JPanel requestTranscript() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Back button
+        JButton backButton = new JButton("Back to Main Menu");
+        backButton.addActionListener(e -> cardLayout.show(cardPanel, "Main"));
+        
+        // Input panel
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // First input: 5-digit number
+        JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
+        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        JTextField numberInputField = new JTextField(15);
+        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        // Input validation - only allow digits and limit to 5 characters
+        numberInputField.setDocument(new PlainDocument() {
+            @Override
+            public void insertString(int offs, String str, AttributeSet a) 
+                throws BadLocationException {
+                if (str == null) return;
+                
+                // Only allow digits
+                if (str.matches("\\d+") && getLength() + str.length() <= 5) {
+                    super.insertString(offs, str, a);
+                }
+            }
+        });
+        
+        // Submit button
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            String numberText = numberInputField.getText().trim();
+            boolean numberValid = validPERMNumber(numberText);
+
+            if (numberValid) {
+                JOptionPane.showMessageDialog(this, 
+                    "Inputs are valid:\nNumber: " + numberText, 
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        
+        // Add components to input panel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        inputPanel.add(numberLabel, gbc);
+        
+        gbc.gridy = 1;
+        inputPanel.add(numberInputField, gbc);
+        
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.CENTER;
+        inputPanel.add(submitButton, gbc);
+        
+        // Add components to main panel
+        panel.add(backButton, BorderLayout.NORTH);
+        panel.add(inputPanel, BorderLayout.CENTER);
+        
+        return panel;
+    }
+
+    private JPanel generateMailer() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Back button
+        JButton backButton = new JButton("Back to Main Menu");
+        backButton.addActionListener(e -> cardLayout.show(cardPanel, "Main"));
+        
+        // Input panel
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // First input: 5-digit number
+        JLabel numberLabel = new JLabel("Enter PERM Number (5 Digits):");
+        numberLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        JTextField numberInputField = new JTextField(15);
+        numberInputField.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        // Input validation - only allow digits and limit to 5 characters
+        numberInputField.setDocument(new PlainDocument() {
+            @Override
+            public void insertString(int offs, String str, AttributeSet a) 
+                throws BadLocationException {
+                if (str == null) return;
+                
+                // Only allow digits
+                if (str.matches("\\d+") && getLength() + str.length() <= 5) {
+                    super.insertString(offs, str, a);
+                }
+            }
+        });
+        
+        // Submit button
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            String numberText = numberInputField.getText().trim();
+            boolean numberValid = validPERMNumber(numberText);
+
+            if (numberValid) {
+                JOptionPane.showMessageDialog(this, 
+                    "Inputs are valid:\nNumber: " + numberText, 
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        
+        // Add components to input panel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        inputPanel.add(numberLabel, gbc);
+        
+        gbc.gridy = 1;
+        inputPanel.add(numberInputField, gbc);
+        
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.CENTER;
+        inputPanel.add(submitButton, gbc);
+        
+        // Add components to main panel
+        panel.add(backButton, BorderLayout.NORTH);
+        panel.add(inputPanel, BorderLayout.CENTER);
+        
+        return panel;
+    }
+
+    private boolean validCourseCode(String course_code) {
+        // Check if it's empty
+        if (course_code.isEmpty()) {
             showError("Please enter a code");
             return false;
         }
 
-        if (!pattern.matches("^[A-Z]{2,4}[0-9]{1,3}$")) {
+        // Check if it matches the regex for course code
+        if (!course_code.matches("^[A-Z]{2,4}[0-9]{1,3}$")) {
             showError("Code must:\n- Be 3 to 7 characters long\n- Start with 2 to 4 letters\n- End with 1 to 3 digits");
             return false;
         }
 
-        int letterCount = pattern.replaceAll("[^A-Z]", "").length();
-        int numberCount = pattern.replaceAll("[^0-9]", "").length();
-
-        if (letterCount < 2) {
-            showError("Minimum 2 letters required");
-            return false;
-        }
-
-        if (letterCount + numberCount != pattern.length()) {
-            showError("Only letters and numbers allowed");
-            return false;
-        }
-
-        return true; // Success
+        return true;
     }
     
-    private boolean handleNumberSubmission(String numberText) {
+    private boolean validPERMNumber(String numberText) {
+        // Check if it's empty
         if (numberText.isEmpty()) {
             showError("Please enter a number");
             return false;
@@ -483,9 +845,8 @@ public class GUI extends JFrame {
             message, 
             "Invalid Input", JOptionPane.WARNING_MESSAGE);
     }
-
     
-    private JPanel createTablesPage() {
+    private JPanel viewTablesPage() {
         JPanel panel = new JPanel(new BorderLayout());
         
         // Initialize components for tables page
